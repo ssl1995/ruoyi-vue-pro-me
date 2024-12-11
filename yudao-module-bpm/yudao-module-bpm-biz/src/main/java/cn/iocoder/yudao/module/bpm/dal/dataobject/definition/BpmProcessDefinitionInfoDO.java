@@ -1,10 +1,12 @@
 package cn.iocoder.yudao.module.bpm.dal.dataobject.definition;
 
 import cn.iocoder.yudao.framework.mybatis.core.dataobject.BaseDO;
+import cn.iocoder.yudao.framework.mybatis.core.type.LongListTypeHandler;
 import cn.iocoder.yudao.framework.mybatis.core.type.StringListTypeHandler;
 import cn.iocoder.yudao.module.bpm.enums.definition.BpmModelFormTypeEnum;
 import cn.iocoder.yudao.module.bpm.enums.definition.BpmModelTypeEnum;
 import cn.iocoder.yudao.module.system.api.user.dto.AdminUserRespDTO;
+import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -25,6 +27,7 @@ import java.util.List;
  * @author 芋道源码
  */
 @TableName(value = "bpm_process_definition_info", autoResultMap = true)
+@KeySequence("bpm_process_definition_info_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
 @Data
 @Builder
 @NoArgsConstructor
@@ -120,6 +123,10 @@ public class BpmProcessDefinitionInfoDO extends BaseDO {
      * 目的：如果 false 不可见，则不展示在“发起流程”的列表里
      */
     private Boolean visible;
+    /**
+     * 排序值
+     */
+    private Long sort;
 
     /**
      * 可发起用户编号数组
@@ -132,7 +139,7 @@ public class BpmProcessDefinitionInfoDO extends BaseDO {
      * 1. {@link #visible} 只是决定是否可见。即使不可见，还是可以发起
      * 2. startUserIds 决定某个用户是否可以发起。如果该用户不可发起，则他也是不可见的
      */
-    @TableField(typeHandler = StringListTypeHandler.class) // 为了可以使用 find_in_set 进行过滤
+    @TableField(typeHandler = LongListTypeHandler.class) // 为了可以使用 find_in_set 进行过滤
     private List<Long> startUserIds;
 
     /**
